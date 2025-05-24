@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: 'springboot-hello'
+  mail:
+    host: localhost
+    port: 1025
+    username: ''
+    password: ''
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/shopdev
+    username: root
+    password: root1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    consumer:
+      group-id: otp-group-id
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+server:
+  port: 8090
