@@ -85,3 +85,4 @@ management:
       show-details: always
     prometheus:
       enabled: true
+

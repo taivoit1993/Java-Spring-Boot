@@ -42,14 +42,14 @@ public class TicketDetailCacheService {
         TicketDetail ticketDetail = redisInfrasService.getObject(genEventItemKey(id), TicketDetail.class);
         // 2. YES -> Hit cache
         if (ticketDetail != null) {
-            log.info("FROM CACHE {}, {}, {}", id, version, ticketDetail);
+//            log.info("FROM CACHE {}, {}, {}", id, version, ticketDetail);
             return ticketDetail;
         }
         // 3. If NO --> Missing cache
 
         // 4. Get data from DBS
         ticketDetail = ticketDetailDomainService.getTicketDetailById(id);
-        log.info("FROM DBS {}, {}, {}", id, version, ticketDetail);
+//        log.info("FROM DBS {}, {}, {}", id, version, ticketDetail);
 
         // 5. check ticketitem
         if (ticketDetail != null) { // Nói sau khi code xong: Code nay co van de -> Gia su ticketItem lay ra tu dbs null thi sao, query mãi
@@ -61,7 +61,7 @@ public class TicketDetailCacheService {
 
     // CHƯA VIP LẮM - KHI HỌ REVIEW CODE - SẼ BẮT VIẾT LẠI
     public TicketDetail getTicketDefaultCacheVip(Long id, Long version) {
-        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
+//        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
         TicketDetail ticketDetail = redisInfrasService.getObject(genEventItemKey(id), TicketDetail.class);
         // 2. YES
         if (ticketDetail != null) {
@@ -91,9 +91,9 @@ public class TicketDetailCacheService {
             // 3 -> van khong co thi truy van DB
 
             ticketDetail = ticketDetailDomainService.getTicketDetailById(id);
-            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
+//            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
             if (ticketDetail == null) { // Neu trong dbs van khong co thi return ve not exists;
-                log.info("TICKET NOT EXITS....{}", version);
+//                log.info("TICKET NOT EXITS....{}", version);
                 // set
                 redisInfrasService.setObject(genEventItemKey(id), ticketDetail);
                 return ticketDetail;
@@ -116,11 +116,11 @@ public class TicketDetailCacheService {
 
 
     public TicketDetail getTicketDefaultCacheVipLocal(Long id, Long version) {
-        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
+//        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
         TicketDetail ticketDetail = this.getTicketDetailLocal(id);
         // 2. YES
         if (ticketDetail != null) {
-            log.info("FROM CACHE LOCAL EXIST {}",ticketDetail);
+//            log.info("FROM CACHE LOCAL EXIST {}",ticketDetail);
             return ticketDetail;
         }
 
@@ -152,9 +152,9 @@ public class TicketDetailCacheService {
             // 3 -> van khong co thi truy van DB
 
             ticketDetail = ticketDetailDomainService.getTicketDetailById(id);
-            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
+//            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
             if (ticketDetail == null) { // Neu trong dbs van khong co thi return ve not exists;
-                log.info("TICKET NOT EXITS....{}", version);
+//                log.info("TICKET NOT EXITS....{}", version);
                 // set
                 redisInfrasService.setObject(genEventItemKey(id), ticketDetail);
                 ticketDetailLocalCache.put(id, ticketDetail);

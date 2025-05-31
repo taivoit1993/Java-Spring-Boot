@@ -49,9 +49,9 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
         }
 
         try {
-            redisTemplate.opsForValue().set(key, value);
+            redisTemplate.opsForValue().set(key, value);;
         }catch (Exception e){
-            log.error("setObject error:{}",e.getMessage());
+//            log.error("setObject error:{}",e.getMessage());
         }
 //        redisTemplate.opsForValue().set(key, value);
 //        // Kiểm tra xem giá trị có được lưu thành công hay không
@@ -67,7 +67,7 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
     @Override
     public <T> T getObject(String key, Class<T> targetClass) {
         Object result = redisTemplate.opsForValue().get(key);
-        log.info("get Cache::{}", result);
+//        log.info("get Cache::{}", result);
         if (result == null) {
             return null;
         }
@@ -85,7 +85,7 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.convertValue(result, targetClass);
             } catch (IllegalArgumentException e) {
-                log.error("Error converting LinkedHashMap to object: {}", e.getMessage());
+//                log.error("Error converting LinkedHashMap to object: {}", e.getMessage());
                 return null;
             }
         }
@@ -96,7 +96,7 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readValue((String) result, targetClass);
             } catch (JsonProcessingException e) {
-                log.error("Error deserializing JSON to object: {}", e.getMessage());
+//                log.error("Error deserializing JSON to object: {}", e.getMessage());
                 return null;
             }
         }
