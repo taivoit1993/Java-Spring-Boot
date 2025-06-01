@@ -26,7 +26,13 @@ public class TicketDetailController {
             @PathVariable("detailId") Long detailId
     ) {
 //        log.info("MEMBER TIPS GO");
-//        log.info(" ticketId:{}, detailId:{}", ticketId, detailId);
+        log.info(" ticketId:{}, detailId:{}", ticketId, detailId);
         return ResultUtil.data(ticketDetailAppService.getTicketDetailById(detailId));
+    }
+
+    @GetMapping("/{ticketId}/detail/{detailId}/order")
+    public Boolean orderTicketByUser( @PathVariable("ticketId") Long ticketId,
+                                                          @PathVariable("detailId") Long detailId) {
+        return ticketDetailAppService.orderTickerByUserId(ticketId);
     }
 }

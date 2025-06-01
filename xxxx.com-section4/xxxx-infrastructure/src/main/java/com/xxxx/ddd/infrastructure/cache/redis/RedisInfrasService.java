@@ -11,6 +11,8 @@ public interface RedisInfrasService {
     void setObjectTTL(String key, Object value, Long ttl);
     <T> T getObject(String key, Class<T> targetClass);
 
+    void deleteObject(String key);
+
 //    void put(String key, Object value, long timeout, TimeUnit unit);
 //
 //    void put(String key, Object value, long expireTime);

@@ -42,14 +42,14 @@ public class TicketDetailCacheService {
         TicketDetail ticketDetail = redisInfrasService.getObject(genEventItemKey(id), TicketDetail.class);
         // 2. YES -> Hit cache
         if (ticketDetail != null) {
-//            log.info("FROM CACHE {}, {}, {}", id, version, ticketDetail);
+            log.info("FROM CACHE {}, {}, {}", id, version, ticketDetail);
             return ticketDetail;
         }
         // 3. If NO --> Missing cache
 
         // 4. Get data from DBS
         ticketDetail = ticketDetailDomainService.getTicketDetailById(id);
-//        log.info("FROM DBS {}, {}, {}", id, version, ticketDetail);
+        log.info("FROM DBS {}, {}, {}", id, version, ticketDetail);
 
         // 5. check ticketitem
         if (ticketDetail != null) { // Nói sau khi code xong: Code nay co van de -> Gia su ticketItem lay ra tu dbs null thi sao, query mãi
@@ -61,14 +61,14 @@ public class TicketDetailCacheService {
 
     // CHƯA VIP LẮM - KHI HỌ REVIEW CODE - SẼ BẮT VIẾT LẠI
     public TicketDetail getTicketDefaultCacheVip(Long id, Long version) {
-//        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
+        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
         TicketDetail ticketDetail = redisInfrasService.getObject(genEventItemKey(id), TicketDetail.class);
         // 2. YES
         if (ticketDetail != null) {
-//            log.info("FROM CACHE EXIST {}",ticketDetail);
+            log.info("FROM CACHE EXIST {}",ticketDetail);
             return ticketDetail;
         }
-//        log.info("CACHE NO EXIST, START GET DB AND SET CACHE->, {}, {} ", id, version);
+        log.info("CACHE NO EXIST, START GET DB AND SET CACHE->, {}, {} ", id, version);
         // Tao lock process voi KEY
         RedisDistributedLocker locker = redisDistributedService.getDistributedLock("PRO_LOCK_KEY_ITEM" + id);
         try {
@@ -78,22 +78,22 @@ public class TicketDetailCacheService {
             // Lưu ý: Cho dù thành công hay không cũng phải unLock, bằng mọi giá.
             // Lưu ý: Cho dù thành công hay không cũng phải unLock, bằng mọi giá.
             if (!isLock) {
-//                log.info("LOCK WAIT ITEM PLEASE....{}", version);
+                log.info("LOCK WAIT ITEM PLEASE....{}", version);
                 return ticketDetail;
             }
             // Get cache
             ticketDetail = redisInfrasService.getObject(genEventItemKey(id), TicketDetail.class);
             // 2. YES
             if (ticketDetail != null) {
-//                log.info("FROM CACHE NGON A {}, {}, {}", id, version, ticketDetail);
+                log.info("FROM CACHE NGON A {}, {}, {}", id, version, ticketDetail);
                 return ticketDetail;
             }
             // 3 -> van khong co thi truy van DB
 
             ticketDetail = ticketDetailDomainService.getTicketDetailById(id);
-//            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
+            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
             if (ticketDetail == null) { // Neu trong dbs van khong co thi return ve not exists;
-//                log.info("TICKET NOT EXITS....{}", version);
+                log.info("TICKET NOT EXITS....{}", version);
                 // set
                 redisInfrasService.setObject(genEventItemKey(id), ticketDetail);
                 return ticketDetail;
@@ -114,13 +114,19 @@ public class TicketDetailCacheService {
         }
     }
 
+    public Boolean orderTickerByUserId(Long ticketId) {
+        ticketDetailLocalCache.invalidate(ticketId); // remove local cache
+        redisInfrasService.deleteObject(genEventItemKey(ticketId));
+        return true;
+    }
+
 
     public TicketDetail getTicketDefaultCacheVipLocal(Long id, Long version) {
-//        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
+        log.info("Implement getTicketDefaultCacheVip->, {}, {} ", id, version);
         TicketDetail ticketDetail = this.getTicketDetailLocal(id);
         // 2. YES
         if (ticketDetail != null) {
-//            log.info("FROM CACHE LOCAL EXIST {}",ticketDetail);
+            log.info("FROM CACHE LOCAL EXIST {}",ticketDetail);
             return ticketDetail;
         }
 
@@ -129,7 +135,7 @@ public class TicketDetailCacheService {
             ticketDetailLocalCache.put(id, ticketDetail);   // set item to local
             return ticketDetail;
         }
-//        log.info("CACHE NO EXIST, START GET DB AND SET CACHE->, {}, {} ", id, version);
+        log.info("CACHE NO EXIST, START GET DB AND SET CACHE->, {}, {} ", id, version);
         // Tao lock process voi KEY
         RedisDistributedLocker locker = redisDistributedService.getDistributedLock("PRO_LOCK_KEY_ITEM" + id);
         try {
@@ -139,22 +145,22 @@ public class TicketDetailCacheService {
             // Lưu ý: Cho dù thành công hay không cũng phải unLock, bằng mọi giá.
             // Lưu ý: Cho dù thành công hay không cũng phải unLock, bằng mọi giá.
             if (!isLock) {
-//                log.info("LOCK WAIT ITEM PLEASE....{}", version);
+                log.info("LOCK WAIT ITEM PLEASE....{}", version);
                 return ticketDetail;
             }
             // Get cache
             ticketDetail = redisInfrasService.getObject(genEventItemKey(id), TicketDetail.class);
             // 2. YES
             if (ticketDetail != null) {
-//                log.info("FROM CACHE NGON A {}, {}, {}", id, version, ticketDetail);
+                log.info("FROM CACHE NGON A {}, {}, {}", id, version, ticketDetail);
                 return ticketDetail;
             }
             // 3 -> van khong co thi truy van DB
 
             ticketDetail = ticketDetailDomainService.getTicketDetailById(id);
-//            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
+            log.info("FROM DBS ->>>> {}, {}", ticketDetail, version);
             if (ticketDetail == null) { // Neu trong dbs van khong co thi return ve not exists;
-//                log.info("TICKET NOT EXITS....{}", version);
+                log.info("TICKET NOT EXITS....{}", version);
                 // set
                 redisInfrasService.setObject(genEventItemKey(id), ticketDetail);
                 ticketDetailLocalCache.put(id, ticketDetail);
